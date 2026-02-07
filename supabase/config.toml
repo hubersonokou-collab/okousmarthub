@@ -1,0 +1,29 @@
+project_id = "zvqiuhostvqwxtumrwdp"
+
+[functions.ai-assistant]
+enabled = true
+verify_jwt = false
+
+[functions.elevenlabs-transcribe]
+enabled = true
+verify_jwt = false
+
+[functions.elevenlabs-tts]
+enabled = true
+verify_jwt = false
+
+[functions.translate-text]
+enabled = true
+verify_jwt = false
+
+[functions.paystack-initialize]
+enabled = true
+verify_jwt = false
+
+[functions.paystack-webhook]
+enabled = true
+verify_jwt = false
+
+[functions.paystack-verify]
+enabled = true
+verify_jwt = false
