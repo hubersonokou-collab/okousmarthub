@@ -17,6 +17,7 @@ import okouLogo from "@/assets/okou-background.png";
 const navLinks = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services" },
+  { href: "/services/redaction-academique", label: "Rédaction Académique" },
   { href: "/formations", label: "Formations" },
   { href: "/portfolio", label: "Portfolio" },
 ];
@@ -38,9 +39,9 @@ export function Header() {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden shadow-primary">
-            <img 
-              src={okouLogo} 
-              alt="OkouSmart Hub" 
+            <img
+              src={okouLogo}
+              alt="OkouSmart Hub"
               className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 gradient-primary opacity-30" />
