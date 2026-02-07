@@ -109,11 +109,11 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     new_number TEXT;
-    current_date TEXT;
+    date_string TEXT;
     sequence_num INTEGER;
 BEGIN
     -- Format de date YYYYMMDD
-    current_date := TO_CHAR(NOW(), 'YYYYMMDD');
+    date_string := TO_CHAR(NOW(), 'YYYYMMDD');
     
     -- Trouver le prochain numéro de séquence pour aujourd'hui
     SELECT COALESCE(MAX(
@@ -124,10 +124,10 @@ BEGIN
     ), 0) + 1
     INTO sequence_num
     FROM public.academic_requests
-    WHERE request_number LIKE 'REF-' || current_date || '-%';
+    WHERE request_number LIKE 'REF-' || date_string || '-%';
     
     -- Générer le numéro avec padding
-    new_number := 'REF-' || current_date || '-' || LPAD(sequence_num::TEXT, 4, '0');
+    new_number := 'REF-' || date_string || '-' || LPAD(sequence_num::TEXT, 4, '0');
     
     RETURN new_number;
 END;
