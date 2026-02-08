@@ -13,6 +13,7 @@ import { Users, FileText, DollarSign, CheckCircle, XCircle, Clock, TrendingUp } 
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { toast } from "sonner";
+import { EvaluationPanel } from "@/components/travel/EvaluationPanel";
 
 export default function SuperAdminDashboard() {
     const { data: allRequests = [], isLoading } = useAllTravelRequests();
@@ -127,13 +128,18 @@ export default function SuperAdminDashboard() {
                         </Card>
                     </div>
 
-                    {/* Tabs principales */}
-                    <Tabs defaultValue="verification" className="space-y-6">
+                    <Tabs defaultValue="evaluations" className="space-y-6">
                         <TabsList>
+                            <TabsTrigger value="evaluations">Évaluations</TabsTrigger>
                             <TabsTrigger value="verification">Vérification Dossiers</TabsTrigger>
                             <TabsTrigger value="users">Gestion Utilisateurs</TabsTrigger>
                             <TabsTrigger value="financial">Gestion Financière</TabsTrigger>
                         </TabsList>
+
+                        {/* TAB: Évaluations */}
+                        <TabsContent value="evaluations">
+                            <EvaluationPanel />
+                        </TabsContent>
 
                         {/* TAB: Vérification des dossiers */}
                         <TabsContent value="verification">
