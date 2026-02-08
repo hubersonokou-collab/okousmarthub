@@ -26,11 +26,17 @@ export interface TravelRequest {
 
 export interface CreateTravelRequestData {
     program_type: 'general' | 'decreto_flussi';
+    project_type?: 'studies' | 'work' | 'tourism' | 'family_reunion';
     full_name: string;
     phone: string;
     email: string;
     date_of_birth?: string;
     nationality?: string;
+    passport_number?: string;
+    passport_issue_date?: string;
+    passport_expiry_date?: string;
+    destination_country?: string;
+    current_situation?: 'student' | 'employee' | 'unemployed' | 'entrepreneur';
     current_occupation?: string;
     total_amount?: number;
     amount_paid?: number;

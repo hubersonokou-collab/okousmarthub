@@ -22,6 +22,10 @@ import VAPVAEService from "./pages/VAPVAEService";
 import VAPVAETrackerPage from "./pages/VAPVAETrackerPage";
 import TravelService from "./pages/TravelService";
 import TravelTrackerPage from "./pages/TravelTrackerPage";
+import DynamicTravelForm from "./components/travel/DynamicTravelForm";
+import ClientDashboard from "./pages/ClientDashboard";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
+import RequestDetailsPage from "./pages/RequestDetailsPage";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +46,11 @@ const App = () => (
           <Route path="/services/vap-vae/suivi" element={<VAPVAETrackerPage />} />
           <Route path="/services/assistance-voyage" element={<TravelService />} />
           <Route path="/services/assistance-voyage/suivi" element={<TravelTrackerPage />} />
+          <Route path="/services/assistance-voyage/demande" element={<DynamicTravelForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/client" element={<ClientDashboard />} />
+          <Route path="/dashboard/client/request/:id" element={<RequestDetailsPage />} />
+          <Route path="/dashboard/superadmin" element={<SuperAdminDashboard />} />
           <Route path="/formations" element={<Formations />} />
           <Route path="/formations/:id" element={<FormationDetail />} />
           <Route path="/tools/translator" element={<VoiceTranslatorPage />} />

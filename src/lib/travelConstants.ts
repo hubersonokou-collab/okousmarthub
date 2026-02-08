@@ -136,6 +136,105 @@ export const getPaymentStageByValue = (value: string) => {
 
 // Types TypeScript
 export type TravelProgramType = 'general' | 'decreto_flussi';
+export type TravelProjectType = 'studies' | 'work' | 'tourism' | 'family_reunion';
+export type TravelCurrentSituation = 'student' | 'employee' | 'unemployed' | 'entrepreneur';
 export type TravelRequestStatus = keyof typeof TRAVEL_REQUEST_STATUS;
 export type TravelDocumentType = keyof typeof TRAVEL_DOCUMENT_TYPES;
 export type PaymentStage = keyof typeof PAYMENT_STAGES;
+
+// =============================================
+// NOUVEAUX: TYPES DE PROJETS
+// =============================================
+
+export const TRAVEL_PROJECT_TYPES = {
+    studies: {
+        value: 'studies',
+        label: 'Études',
+        icon: '🎓',
+        description: 'Poursuivre des études à l\'étranger',
+        baseFee: 50000, // FCFA
+    },
+    work: {
+        value: 'work',
+        label: 'Travail',
+        icon: '💼',
+        description: 'Opportunités professionnelles à l\'étranger',
+        baseFee: 75000,
+    },
+    tourism: {
+        value: 'tourism',
+        label: 'Tourisme',
+        icon: '✈️',
+        description: 'Voyage touristique et vacances',
+        baseFee: 30000,
+    },
+    family_reunion: {
+        value: 'family_reunion',
+        label: 'Regroupement Familial',
+        icon: '👨‍👩‍👧',
+        description: 'Rejoindre un membre de la famille',
+        baseFee: 60000,
+    },
+} as const;
+
+// =============================================
+// DOCUMENTS REQUIS PAR TYPE DE PROJET
+// =============================================
+
+export const REQUIRED_DOCUMENTS_BY_PROJECT = {
+    studies: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'diplomas', label: 'Derniers diplômes obtenus', required: true },
+        { type: 'transcripts', label: 'Relevés de notes (3 dernières années)', required: true },
+        { type: 'cv', label: 'Curriculum Vitae détaillé', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
+        { type: 'admission_letter', label: 'Lettre d\'admission (si disponible)', required: false },
+    ],
+    work: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'cv', label: 'Curriculum Vitae professionnel', required: true },
+        { type: 'work_certificates', label: 'Certificats de travail', required: true },
+        { type: 'diplomas', label: 'Diplômes et certifications', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
+        { type: 'job_offer', label: 'Offre d\'emploi (si disponible)', required: false },
+    ],
+    tourism: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
+        { type: 'hotel_booking', label: 'Réservation d\'hôtel', required: false },
+        { type: 'return_ticket', label: 'Billet retour (si disponible)', required: false },
+    ],
+    family_reunion: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'birth_certificate', label: 'Acte de naissance', required: true },
+        { type: 'family_proof', label: 'Preuve de lien familial', required: true },
+        { type: 'sponsor_documents', label: 'Documents du sponsor/garant', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires', required: true },
+    ],
+} as const;
+
+// =============================================
+// PAYS POPULAIRES PAR PROJET
+// =============================================
+
+export const POPULAR_DESTINATIONS = {
+    studies: ['Canada', 'France', 'USA', 'UK', 'Allemagne', 'Belgique'],
+    work: ['Canada', 'Italie', 'Allemagne', 'France', 'Espagne', 'Portugal'],
+    tourism: ['France', 'Espagne', 'Italie', 'Maroc', 'Sénégal', 'Dubai'],
+    family_reunion: ['France', 'Canada', 'USA', 'UK', 'Belgique'],
+} as const;
+
+// =============================================
+// SITUATIONS ACTUELLES
+// =============================================
+
+export const CURRENT_SITUATIONS = {
+    student: { label: 'Étudiant', icon: '📚' },
+    employee: { label: 'Salarié', icon: '💼' },
+    unemployed: { label: 'Sans emploi', icon: '🔍' },
+    entrepreneur: { label: 'Entrepreneur', icon: '🚀' },
+} as const;
