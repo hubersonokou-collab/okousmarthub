@@ -472,22 +472,7 @@ $$;
 -- PARTIE 11: TRIGGERS
 -- =============================================
 
--- Trigger: Générer numéro de demande
-CREATE TRIGGER trigger_travel_request_number
-    BEFORE INSERT ON public.travel_requests
-    FOR EACH ROW
-    EXECUTE FUNCTION (
-        SELECT CASE 
-            WHEN NEW.request_number IS NULL OR NEW.request_number = '' 
-            THEN public.generate_travel_request_number()
-            ELSE NEW.request_number
-        END
-    );
-
--- Note: En PostgreSQL, on ne peut pas appeler une fonction dans EXECUTE FUNCTION directement
--- Voici la version correcte:
-DROP TRIGGER IF EXISTS trigger_travel_request_number ON public.travel_requests;
-
+-- Fonction helper: Générer numéro si vide
 CREATE OR REPLACE FUNCTION public.set_request_number()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -500,6 +485,7 @@ BEGIN
 END;
 $$;
 
+-- Trigger: Générer numéro de demande
 CREATE TRIGGER trigger_travel_request_number
     BEFORE INSERT ON public.travel_requests
     FOR EACH ROW
