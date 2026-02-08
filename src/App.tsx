@@ -18,6 +18,8 @@ import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
 import AcademicService from "./pages/AcademicService";
 import AcademicTrackerPage from "./pages/AcademicTrackerPage";
+import VAPVAEService from "./pages/VAPVAEService";
+import VAPVAETrackerPage from "./pages/VAPVAETrackerPage";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,8 @@ const App = () => (
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/services/redaction-academique" element={<AcademicService />} />
           <Route path="/services/redaction-academique/suivi" element={<AcademicTrackerPage />} />
+          <Route path="/services/vap-vae" element={<VAPVAEService />} />
+          <Route path="/services/vap-vae/suivi" element={<VAPVAETrackerPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/formations" element={<Formations />} />
           <Route path="/formations/:id" element={<FormationDetail />} />
