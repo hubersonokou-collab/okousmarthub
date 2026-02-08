@@ -11,7 +11,7 @@ import {
     EVALUATION_STATUS,
     PAYMENT_STAGE_NEW
 } from "@/lib/travelConstants";
-import { FileText, Plus, Bell, Loader2, AlertCircle, CheckCircle2, Clock } from "lucide-react";
+import { FileText, Plus, Bell, Loader2, AlertCircle, CheckCircle2, Clock, CreditCard } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -145,10 +145,10 @@ export default function ClientDashboard() {
                                                                 <Badge
                                                                     variant="outline"
                                                                     className={`${request.evaluation_status === 'approved'
-                                                                            ? 'bg-green-50 border-green-300 text-green-700'
-                                                                            : request.evaluation_status === 'rejected'
-                                                                                ? 'bg-red-50 border-red-300 text-red-700'
-                                                                                : 'bg-yellow-50 border-yellow-300 text-yellow-700'
+                                                                        ? 'bg-green-50 border-green-300 text-green-700'
+                                                                        : request.evaluation_status === 'rejected'
+                                                                            ? 'bg-red-50 border-red-300 text-red-700'
+                                                                            : 'bg-yellow-50 border-yellow-300 text-yellow-700'
                                                                         }`}
                                                                 >
                                                                     {request.evaluation_status === 'approved' && '✅ Éligible'}
@@ -183,6 +183,22 @@ export default function ClientDashboard() {
                                                                     <p className="text-sm text-red-700">{request.evaluation_notes}</p>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Payment Required Button */}
+                                                    {request.payment_stage && request.payment_stage !== 'completed' && (
+                                                        <div className="mt-4">
+                                                            <Button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    navigate(`/voyage/payment/${request.id}`);
+                                                                }}
+                                                                className="w-full bg-blue-600 hover:bg-blue-700"
+                                                            >
+                                                                <CreditCard className="h-4 w-4 mr-2" />
+                                                                Effectuer le paiement
+                                                            </Button>
                                                         </div>
                                                     )}
 

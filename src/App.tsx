@@ -26,6 +26,7 @@ import DynamicTravelForm from "./components/travel/DynamicTravelForm";
 import ClientDashboard from "./pages/ClientDashboard";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import RequestDetailsPage from "./pages/RequestDetailsPage";
+import TravelPaymentPage from "./pages/TravelPaymentPage";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/services/assistance-voyage" element={<TravelService />} />
           <Route path="/services/assistance-voyage/suivi" element={<TravelTrackerPage />} />
           <Route path="/services/assistance-voyage/demande" element={<DynamicTravelForm />} />
+          <Route path="/voyage/payment/:requestId" element={<TravelPaymentPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/client" element={<ClientDashboard />} />
           <Route path="/dashboard/client/request/:id" element={<RequestDetailsPage />} />
