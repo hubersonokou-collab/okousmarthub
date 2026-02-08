@@ -18,6 +18,8 @@ import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
 import AcademicService from "./pages/AcademicService";
 import AcademicTrackerPage from "./pages/AcademicTrackerPage";
+import VAPVAEService from "./pages/VAPVAEService";
+import VAPVAETrackerPage from "./pages/VAPVAETrackerPage";
 import RequestDetailsPage from "./pages/RequestDetailsPage";
 
 const queryClient = new QueryClient();
