@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useUserTravelRequests } from "@/hooks/useTravelRequest";
 import { useUnreadNotifications } from "@/hooks/useNotifications";
-import { TRAVEL_REQUEST_STATUS, TRAVEL_PROJECT_TYPES, formatPrice } from "@/lib/travelConstants";
-import { FileText, Plus, Bell, Loader2 } from "lucide-react";
+import {
+    TRAVEL_REQUEST_STATUS,
+    TRAVEL_PROJECT_TYPES,
+    formatPrice,
+    EVALUATION_STATUS,
+    PAYMENT_STAGE_NEW
+} from "@/lib/travelConstants";
+import { FileText, Plus, Bell, Loader2, AlertCircle, CheckCircle2, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -129,10 +135,56 @@ export default function ClientDashboard() {
                                                                 {format(new Date(request.created_at), 'dd MMMM yyyy', { locale: fr })}
                                                             </p>
                                                         </div>
-                                                        <Badge className={`${statusConfig.color} text-white`}>
-                                                            {statusConfig.label}
-                                                        </Badge>
+                                                        <div className="flex flex-col gap-2 items-end">
+                                                            <Badge className={`${statusConfig.color} text-white`}>
+                                                                {statusConfig.label}
+                                                            </Badge>
+
+                                                            {/* Evaluation Status Badge */}
+                                                            {request.evaluation_status && (
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className={`${request.evaluation_status === 'approved'
+                                                                            ? 'bg-green-50 border-green-300 text-green-700'
+                                                                            : request.evaluation_status === 'rejected'
+                                                                                ? 'bg-red-50 border-red-300 text-red-700'
+                                                                                : 'bg-yellow-50 border-yellow-300 text-yellow-700'
+                                                                        }`}
+                                                                >
+                                                                    {request.evaluation_status === 'approved' && '✅ Éligible'}
+                                                                    {request.evaluation_status === 'rejected' && '❌ Non éligible'}
+                                                                    {request.evaluation_status === 'pending' && '⏳ En évaluation'}
+                                                                </Badge>
+                                                            )}
+                                                        </div>
                                                     </div>
+
+                                                    {/* Payment Stage Indicator */}
+                                                    {request.payment_stage && request.payment_stage !== 'completed' && (
+                                                        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                                            <div className="flex items-center gap-2">
+                                                                <Clock className="h-4 w-4 text-blue-600" />
+                                                                <p className="text-sm font-medium text-blue-900">
+                                                                    {request.payment_stage === 'evaluation' && 'Paiement évaluation requis (10 000 FCFA)'}
+                                                                    {request.payment_stage === 'tranche1' && 'Paiement 1ère tranche requis (1 000 000 FCFA)'}
+                                                                    {request.payment_stage === 'tranche2' && 'Paiement 2ème tranche requis (1 500 000 FCFA)'}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Evaluation Notes (if rejected) */}
+                                                    {request.evaluation_status === 'rejected' && request.evaluation_notes && (
+                                                        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                                                            <div className="flex items-start gap-2">
+                                                                <AlertCircle className="h-4 w-4 text-red-600 mt-0.5" />
+                                                                <div>
+                                                                    <p className="text-sm font-medium text-red-900 mb-1">Motif du refus</p>
+                                                                    <p className="text-sm text-red-700">{request.evaluation_notes}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
                                                     {request.program_type === 'decreto_flussi' && (
                                                         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
