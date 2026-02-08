@@ -119,7 +119,10 @@ export default function TravelService() {
                                             <span className="text-sm">Support continu dans l'application</span>
                                         </div>
                                     </div>
-                                    <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+                                    <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700" onClick={() => {
+                                        const message = "Bonjour, je souhaite obtenir plus d'informations sur votre service d'assistance voyage général.";
+                                        window.open(`https://wa.me/2250708080808?text=${encodeURIComponent(message)}`, '_blank');
+                                    }}>
                                         En savoir plus
                                     </Button>
                                 </CardContent>
@@ -148,7 +151,10 @@ export default function TravelService() {
                                         <p className="font-semibold text-green-700 mb-2">💰 Coût total : 1 500 000 FCFA</p>
                                         <p className="text-sm text-muted-foreground">Paiement en 3 tranches</p>
                                     </div>
-                                    <Button className="w-full bg-green-600 hover:bg-green-700">
+                                    <Button className="w-full bg-green-600 hover:bg-green-700" onClick={() => {
+                                        const element = document.getElementById('decreto-section');
+                                        element?.scrollIntoView({ behavior: 'smooth' });
+                                    }}>
                                         Découvrir le programme
                                     </Button>
                                 </CardContent>
@@ -159,7 +165,7 @@ export default function TravelService() {
             </section>
 
             {/* Decreto Flussi Détaillé */}
-            <section className="py-16 bg-gradient-to-b from-green-50/50 to-white">
+            <section id="decreto-section" className="py-16 bg-gradient-to-b from-green-50/50 to-white">
                 <div className="container mx-auto px-4">
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center mb-12">
