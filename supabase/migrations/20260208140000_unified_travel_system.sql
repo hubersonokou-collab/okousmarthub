@@ -332,10 +332,10 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     new_number TEXT;
-    current_date TEXT;
+    date_str TEXT;
     sequence_num INTEGER;
 BEGIN
-    current_date := TO_CHAR(NOW(), 'YYYYMMDD');
+    date_str := TO_CHAR(NOW(), 'YYYYMMDD');
     
     SELECT COALESCE(MAX(
         CAST(
@@ -345,9 +345,9 @@ BEGIN
     ), 0) + 1
     INTO sequence_num
     FROM public.travel_requests
-    WHERE request_number LIKE 'TRAVEL-' || current_date || '-%';
+    WHERE request_number LIKE 'TRAVEL-' || date_str || '-%';
     
-    new_number := 'TRAVEL-' || current_date || '-' || LPAD(sequence_num::TEXT, 4, '0');
+    new_number := 'TRAVEL-' || date_str || '-' || LPAD(sequence_num::TEXT, 4, '0');
     
     RETURN new_number;
 END;
