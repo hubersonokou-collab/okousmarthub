@@ -2,7 +2,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
 import { PartnersCarousel } from "@/components/home/PartnersCarousel";
-import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { StatsSection } from "@/components/home/StatsSection";
 import { TestimonialsCarousel } from "@/components/home/TestimonialsCarousel";
@@ -16,7 +15,6 @@ const Index = () => {
       <main className="flex-1">
         <HeroSection />
         <PartnersCarousel />
-        <ServicesGrid />
         <HowItWorksSection />
         <StatsSection />
         <TestimonialsCarousel />

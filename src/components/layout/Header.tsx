@@ -16,7 +16,6 @@ import okouLogo from "@/assets/okou-background.png";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
-  { href: "/services", label: "Services" },
   { href: "/services/redaction-academique", label: "Rédaction Académique" },
   { href: "/services/vap-vae", label: "VAP / VAE" },
   { href: "/formations", label: "Formations" },
