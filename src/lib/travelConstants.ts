@@ -136,44 +136,125 @@ export const getPaymentStageByValue = (value: string) => {
 
 // Types TypeScript
 export type TravelProgramType = 'general' | 'decreto_flussi';
-export type TravelProjectType = 'studies' | 'work' | 'tourism' | 'family_reunion';
+export type TravelProjectType = 'tourism' | 'business' | 'studies' | 'immigration' | 'family_reunion';
 export type TravelCurrentSituation = 'student' | 'employee' | 'unemployed' | 'entrepreneur';
 export type TravelRequestStatus = keyof typeof TRAVEL_REQUEST_STATUS;
 export type TravelDocumentType = keyof typeof TRAVEL_DOCUMENT_TYPES;
 export type PaymentStage = keyof typeof PAYMENT_STAGES;
 
 // =============================================
-// NOUVEAUX: TYPES DE PROJETS
+// STATUTS D'ÉVALUATION
+// =============================================
+
+export const EVALUATION_STATUS = {
+    pending: {
+        value: 'pending',
+        label: 'En attente d\'évaluation',
+        color: 'bg-yellow-500',
+        icon: '⏳',
+        description: 'Votre dossier est en cours d\'analyse',
+    },
+    approved: {
+        value: 'approved',
+        label: 'Éligible',
+        color: 'bg-green-500',
+        icon: '✅',
+        description: 'Votre dossier a été approuvé',
+    },
+    rejected: {
+        value: 'rejected',
+        label: 'Non éligible',
+        color: 'bg-red-500',
+        icon: '❌',
+        description: 'Votre dossier n\'a pas été retenu',
+    },
+} as const;
+
+export type EvaluationStatus = keyof typeof EVALUATION_STATUS;
+
+export const PAYMENT_STAGE_NEW = {
+    evaluation: {
+        value: 'evaluation',
+        label: 'Évaluation',
+        amount: 10000,
+        description: 'Paiement de l\'évaluation du dossier',
+    },
+    tranche1: {
+        value: 'tranche1',
+        label: '1ère tranche',
+        amount: 1000000,
+        description: 'Démarrage du processus',
+    },
+    tranche2: {
+        value: 'tranche2',
+        label: '2ème tranche',
+        amount: 1500000,
+        description: 'Visa disponible',
+    },
+    completed: {
+        value: 'completed',
+        label: 'Terminé',
+        amount: 0,
+        description: 'Paiement complet effectué',
+    },
+} as const;
+
+export type PaymentStageNew = keyof typeof PAYMENT_STAGE_NEW;
+
+// =============================================
+// NOUVEAUX: TYPES DE PROJETS AVEC ÉVALUATION
 // =============================================
 
 export const TRAVEL_PROJECT_TYPES = {
-    studies: {
-        value: 'studies',
-        label: 'Études',
-        icon: '🎓',
-        description: 'Poursuivre des études à l\'étranger',
-        baseFee: 50000, // FCFA
-    },
-    work: {
-        value: 'work',
-        label: 'Travail',
-        icon: '💼',
-        description: 'Opportunités professionnelles à l\'étranger',
-        baseFee: 75000,
-    },
     tourism: {
         value: 'tourism',
-        label: 'Tourisme',
+        label: 'Voyage Touristique',
         icon: '✈️',
         description: 'Voyage touristique et vacances',
-        baseFee: 30000,
+        evaluationFee: 10000, // Évaluation obligatoire
+        serviceFee: 2500000,  // Service complet après éligibilité
+        tranche1: 1000000,    // 1ère tranche
+        tranche2: 1500000,    // 2ème tranche (visa disponible)
+    },
+    business: {
+        value: 'business',
+        label: 'Voyage d\'Affaires',
+        icon: '💼',
+        description: 'Opportunités professionnelles à l\'étranger',
+        evaluationFee: 10000,
+        serviceFee: 2500000,
+        tranche1: 1000000,
+        tranche2: 1500000,
+    },
+    studies: {
+        value: 'studies',
+        label: 'Voyage d\'Études',
+        icon: '🎓',
+        description: 'Poursuivre des études à l\'étranger',
+        evaluationFee: 10000,
+        serviceFee: 2500000,
+        tranche1: 1000000,
+        tranche2: 1500000,
+    },
+    immigration: {
+        value: 'immigration',
+        label: 'Immigration / Installation',
+        icon: '🏠',
+        description: 'S\'installer définitivement à l\'étranger',
+        evaluationFee: 10000,
+        serviceFee: 2500000,
+        tranche1: 1000000,
+        tranche2: 1500000,
     },
     family_reunion: {
         value: 'family_reunion',
         label: 'Regroupement Familial',
         icon: '👨‍👩‍👧',
         description: 'Rejoindre un membre de la famille',
-        baseFee: 60000,
+        evaluationFee: 10000,
+        serviceFee: 2500000,
+        tranche1: 1000000,
+        tranche2: 1500000,
     },
 } as const;
 
@@ -182,6 +263,22 @@ export const TRAVEL_PROJECT_TYPES = {
 // =============================================
 
 export const REQUIRED_DOCUMENTS_BY_PROJECT = {
+    tourism: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
+        { type: 'hotel_booking', label: 'Réservation d\'hôtel', required: false },
+        { type: 'return_ticket', label: 'Billet retour (si disponible)', required: false },
+    ],
+    business: [
+        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
+        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
+        { type: 'cv', label: 'Curriculum Vitae professionnel', required: true },
+        { type: 'work_certificates', label: 'Certificats de travail', required: true },
+        { type: 'company_docs', label: 'Documents entreprise', required: false },
+        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
+        { type: 'invitation_letter', label: 'Lettre d\'invitation', required: false },
+    ],
     studies: [
         { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
         { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
@@ -191,21 +288,15 @@ export const REQUIRED_DOCUMENTS_BY_PROJECT = {
         { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
         { type: 'admission_letter', label: 'Lettre d\'admission (si disponible)', required: false },
     ],
-    work: [
+    immigration: [
         { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
         { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
-        { type: 'cv', label: 'Curriculum Vitae professionnel', required: true },
-        { type: 'work_certificates', label: 'Certificats de travail', required: true },
+        { type: 'birth_certificate', label: 'Acte de naissance', required: true },
+        { type: 'cv', label: 'Curriculum Vitae complet', required: true },
         { type: 'diplomas', label: 'Diplômes et certifications', required: true },
-        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
-        { type: 'job_offer', label: 'Offre d\'emploi (si disponible)', required: false },
-    ],
-    tourism: [
-        { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
-        { type: 'photo', label: 'Photo d\'identité (fond blanc)', required: true },
-        { type: 'bank_statements', label: 'Relevés bancaires (3 mois)', required: true },
-        { type: 'hotel_booking', label: 'Réservation d\'hôtel', required: false },
-        { type: 'return_ticket', label: 'Billet retour (si disponible)', required: false },
+        { type: 'work_certificates', label: 'Certificats de travail', required: true },
+        { type: 'bank_statements', label: 'Relevés bancaires (6 mois)', required: true },
+        { type: 'proof_of_funds', label: 'Preuve de ressources financières', required: true },
     ],
     family_reunion: [
         { type: 'passport', label: 'Passeport (page d\'identité)', required: true },
@@ -222,9 +313,10 @@ export const REQUIRED_DOCUMENTS_BY_PROJECT = {
 // =============================================
 
 export const POPULAR_DESTINATIONS = {
-    studies: ['Canada', 'France', 'USA', 'UK', 'Allemagne', 'Belgique'],
-    work: ['Canada', 'Italie', 'Allemagne', 'France', 'Espagne', 'Portugal'],
     tourism: ['France', 'Espagne', 'Italie', 'Maroc', 'Sénégal', 'Dubai'],
+    business: ['Canada', 'France', 'Allemagne', 'USA', 'UK', 'Dubai'],
+    studies: ['Canada', 'France', 'USA', 'UK', 'Allemagne', 'Belgique'],
+    immigration: ['Canada', 'Australie', 'Nouvelle-Zélande', 'UK', 'Portugal', 'Espagne'],
     family_reunion: ['France', 'Canada', 'USA', 'UK', 'Belgique'],
 } as const;
 
