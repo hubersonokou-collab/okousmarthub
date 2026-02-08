@@ -19,6 +19,7 @@ const navLinks = [
   { href: "/services", label: "Services" },
   { href: "/services/redaction-academique", label: "Rédaction Académique" },
   { href: "/services/vap-vae", label: "VAP / VAE" },
+  { href: "/services/assistance-voyage", label: "Assistance Voyage" },
   { href: "/formations", label: "Formations" },
   { href: "/portfolio", label: "Portfolio" },
 ];

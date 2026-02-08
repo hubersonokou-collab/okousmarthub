@@ -20,6 +20,7 @@ import AcademicService from "./pages/AcademicService";
 import AcademicTrackerPage from "./pages/AcademicTrackerPage";
 import VAPVAEService from "./pages/VAPVAEService";
 import VAPVAETrackerPage from "./pages/VAPVAETrackerPage";
+import TravelService from "./pages/TravelService";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/services/redaction-academique/suivi" element={<AcademicTrackerPage />} />
           <Route path="/services/vap-vae" element={<VAPVAEService />} />
           <Route path="/services/vap-vae/suivi" element={<VAPVAETrackerPage />} />
+          <Route path="/services/assistance-voyage" element={<TravelService />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/formations" element={<Formations />} />
           <Route path="/formations/:id" element={<FormationDetail />} />
