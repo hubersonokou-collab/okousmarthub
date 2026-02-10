@@ -6,6 +6,8 @@ import { UserSearch, FolderOpen, PenTool, Award, ArrowRight, CheckCircle2 } from
 import { VAPVAEPricingCard } from "@/components/vapvae/VAPVAEPricingCard";
 import { VAPVAERequestForm } from "@/components/vapvae/VAPVAERequestForm";
 import { VAP_VAE_LEVELS } from "@/lib/vapvaeConstants";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 const processSteps = [
     {
@@ -73,6 +75,8 @@ export default function VAPVAEService() {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-white">
+            <Header />
+
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 overflow-hidden">
                 <div className="absolute inset-0 bg-grid-pattern opacity-5" />
@@ -312,6 +316,8 @@ export default function VAPVAEService() {
                     </Button>
                 </div>
             </section>
+
+            <Footer />
         </div>
     );
 }

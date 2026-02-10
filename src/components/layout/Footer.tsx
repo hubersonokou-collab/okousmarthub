@@ -70,6 +70,12 @@ export function Footer() {
                   Analyse Financière
                 </Link>
               </li>
+              <li>
+                <Link to="/services/conception-site-web" className="hover:text-primary transition-colors flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-rose-500" />
+                  Conception de site web
+                </Link>
+              </li>
             </ul>
           </div>
 

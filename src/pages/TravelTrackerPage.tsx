@@ -9,6 +9,8 @@ import { useTravelRequestByNumber, useTravelStatusHistory, useTravelPayments } f
 import { TRAVEL_REQUEST_STATUS, formatPrice, PAYMENT_STAGES } from "@/lib/travelConstants";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 
 export default function TravelTrackerPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -34,15 +36,17 @@ export default function TravelTrackerPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-white py-16">
-            <div className="container mx-auto px-4">
+        <div className="min-h-screen bg-gradient-to-b from-white via-blue-50/30 to-white">
+            <Header />
+
+            <div className="container mx-auto px-4 py-16">
                 <div className="max-w-4xl mx-auto">
                     {/* Header */}
                     <div className="text-center mb-12">
-                        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
                             Suivi de dossier Assistance Voyage
                         </h1>
-                        <p className="text-muted-foreground">
+                        <p className="text-lg text-gray-600">
                             Entrez votre numéro de dossier pour suivre l'évolution de votre demande
                         </p>
                     </div>
@@ -240,6 +244,8 @@ export default function TravelTrackerPage() {
                     )}
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }
