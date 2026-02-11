@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { usePaystackPayment } from 'react-paystack';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { PAYMENT_CONFIG, PAYSTACK_CONFIG, formatAmountForPaystack, PaymentStageType } from '@/lib/paymentConfig';
 import { formatPrice } from '@/lib/travelConstants';
 import { CreditCard, Loader2, CheckCircle, AlertCircle } from 'lucide-react';

@@ -6,7 +6,7 @@ import { PaymentCard } from '@/components/travel/PaymentButton';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { Loader2, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import type { PaymentStageType } from '@/lib/paymentConfig';
 
