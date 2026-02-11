@@ -70,12 +70,24 @@ export interface CVTemplate {
     name: string;
     country: CountryCode;
     template_type: TemplateType;
+    type?: TemplateType; // Alias for template_type (for template gallery convenience)
     description: string;
+    layout: string; // Layout type: 'single_column', 'two_column', etc.
     layout_config: LayoutConfig;
+    sections: string[]; // Array of section names included in template
     sections_config: string[];
+    color_scheme?: {
+        primary: string;
+        secondary: string;
+        accent: string;
+    };
+    font_family?: string;
     is_active: boolean;
     is_premium: boolean;
     preview_image_url: string | null;
+    thumbnail_url?: string; // Thumbnail for gallery display
+    preview_url?: string; // PDF preview URL
+    popularity_score?: number; // 0-100, for sorting templates
     tags: string[];
     created_at: string;
     updated_at: string;
