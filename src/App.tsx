@@ -31,6 +31,7 @@ import AICVServicePage from "./pages/AICVServicePage";
 import CreditPurchasePage from "./pages/CreditPurchasePage";
 import AIPhotoGeneratorPage from "./pages/AIPhotoGeneratorPage";
 import AIPhotoGalleryPage from "./pages/AIPhotoGalleryPage";
+import ComingSoonPage from "./pages/ComingSoonPage";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,9 @@ const App = () => (
           <Route path="/services/cv-ai/credits" element={<CreditPurchasePage />} />
           <Route path="/services/cv-ai/photo-generator" element={<AIPhotoGeneratorPage />} />
           <Route path="/services/cv-ai/photo-gallery" element={<AIPhotoGalleryPage />} />
+          <Route path="/services/cv-ai/create-cv" element={<ComingSoonPage />} />
+          <Route path="/services/cv-ai/create-letter" element={<ComingSoonPage />} />
+          <Route path="/services/cv-ai/documents" element={<ComingSoonPage />} />
           <Route path="/admin/*" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
