@@ -32,6 +32,7 @@ import CreditPurchasePage from "./pages/CreditPurchasePage";
 import AIPhotoGeneratorPage from "./pages/AIPhotoGeneratorPage";
 import AIPhotoGalleryPage from "./pages/AIPhotoGalleryPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
+import UnifiedDashboardPage from "./pages/UnifiedDashboardPage";
 
 const queryClient = new QueryClient();
 
@@ -55,7 +56,8 @@ const App = () => (
           <Route path="/services/assistance-voyage/suivi" element={<TravelTrackerPage />} />
           <Route path="/services/assistance-voyage/demande" element={<DynamicTravelForm />} />
           <Route path="/voyage/payment/:requestId" element={<TravelPaymentPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<UnifiedDashboardPage />} />
+          <Route path="/dashboard/legacy" element={<Dashboard />} />
           <Route path="/dashboard/client" element={<ClientDashboard />} />
           <Route path="/dashboard/client/request/:id" element={<RequestDetailsPage />} />
           <Route path="/dashboard/superadmin" element={<SuperAdminDashboard />} />
