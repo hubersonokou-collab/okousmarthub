@@ -27,6 +27,8 @@ import ClientDashboard from "./pages/ClientDashboard";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import RequestDetailsPage from "./pages/RequestDetailsPage";
 import TravelPaymentPage from "./pages/TravelPaymentPage";
+import AICVServicePage from "./pages/AICVServicePage";
+import CreditPurchasePage from "./pages/CreditPurchasePage";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +62,8 @@ const App = () => (
           <Route path="/payment/:orderId" element={<PaymentPage />} />
           <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/services/cv-ai" element={<AICVServicePage />} />
+          <Route path="/services/cv-ai/credits" element={<CreditPurchasePage />} />
           <Route path="/admin/*" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
