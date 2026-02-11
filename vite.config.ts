@@ -4,26 +4,26 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+// https://vitejs.dev/config/
+export default defineConfig({
   server: {
     host: "::",
     port: 8080,
-    hmr: {
-      overlay: false,
-    },
   },
   plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    dedupe: ["react", "react-dom"],
-  },
-  optimizeDeps: {
-    include: ["react", "react-dom"],
   },
   build: {
-    target: "esnext",
-    minify: false, // Temporarily disable minification to debug/pass build
+    target: "es2015",
+    minify: "esbuild",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
-}));
+});
