@@ -4,7 +4,7 @@
 export type CountryCode = 'canada' | 'france' | 'australia' | 'usa';
 export type LanguageCode = 'fr' | 'en' | 'de' | 'es';
 export type DocumentType = 'cv' | 'cover_letter';
-export type TemplateType = 'modern' | 'classic' | 'creative' | 'executive' | 'simple';
+export type TemplateType = 'modern' | 'classic' | 'creative' | 'executive' | 'simple' | 'minimal';
 export type TransactionType = 'purchase' | 'usage' | 'refund' | 'bonus';
 export type ActionType =
     | 'cv_generation_basic'
