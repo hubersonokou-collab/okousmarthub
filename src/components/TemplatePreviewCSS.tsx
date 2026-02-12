@@ -1,15 +1,8 @@
 import React from 'react';
+import type { CVTemplate } from '@/types/aiCVService';
 
 interface TemplatePreviewProps {
-    template: {
-        id: string;
-        layout: 'single_column' | 'two_column_sidebar' | 'single_column_creative';
-        color_scheme: {
-            primary: string;
-            secondary: string;
-            accent: string;
-        };
-    };
+    template: CVTemplate;
 }
 
 export const TemplatePreviewCSS: React.FC<TemplatePreviewProps> = ({ template }) => {
