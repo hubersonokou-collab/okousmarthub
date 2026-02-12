@@ -14,6 +14,7 @@ import { useCredits } from '@/hooks/useAICV';
 import { getTemplateById } from '@/lib/cvTemplates';
 import { generateCVPDF, downloadCVPDF } from '@/lib/pdfGenerationService';
 import { useAuth } from '@/hooks/useAuth';
+import { enhanceSummary, suggestSkills } from '@/lib/aiAssistant';
 import {
     ArrowLeft, ArrowRight, Sparkles, FileText, Briefcase,
     GraduationCap, Award, Languages, User, Mail, Phone,
@@ -40,6 +41,11 @@ export default function CVBuilderPage() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+    // AI Features states
+    const [isEnhancingSummary, setIsEnhancingSummary] = useState(false);
+    const [isLoadingSkills, setIsLoadingSkills] = useState(false);
+    const [suggestedSkills, setSuggestedSkills] = useState<{ technical: string[]; soft: string[] } | null>(null);
     const [cvData, setCvData] = useState({
         // Personal Info
         firstName: '',
@@ -125,6 +131,85 @@ export default function CVBuilderPage() {
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    // AI Handler: Enhance Summary
+    const handleEnhanceSummary = async () => {
+        if (!cvData.summary || cvData.summary.trim().length < 10) {
+            toast({
+                title: 'Texte trop court',
+                description: 'Écrivez au moins 10 caractères pour que l\'IA puisse améliorer votre résumé.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        setIsEnhancingSummary(true);
+        try {
+            const enhanced = await enhanceSummary(cvData.summary);
+            setCvData({ ...cvData, summary: enhanced });
+            toast({
+                title: '✨ Résumé amélioré !',
+                description: 'Votre résumé a été optimisé par l\'IA.',
+            });
+        } catch (error: any) {
+            toast({
+                title: 'Erreur IA',
+                description: error.message || 'Impossible d\'améliorer le résumé.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsEnhancingSummary(false);
+        }
+    };
+
+    // AI Handler: Suggest Skills
+    const handleSuggestSkills = async () => {
+        setIsLoadingSkills(true);
+        try {
+            const jobTitle = cvData.experiences[0]?.position || '';
+            const industry = template?.tags[0] || 'général';
+            const existingSkills = [...cvData.technicalSkills, ...cvData.softSkills];
+
+            const suggestions = await suggestSkills({
+                jobTitle,
+                industry,
+                existingSkills,
+            });
+
+            setSuggestedSkills(suggestions);
+            toast({
+                title: '🎯 Suggestions générées !',
+                description: `${suggestions.technical.length} compétences techniques et ${suggestions.soft.length} soft skills suggérés.`,
+            });
+        } catch (error: any) {
+            toast({
+                title: 'Erreur IA',
+                description: error.message || 'Impossible de générer des suggestions.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoadingSkills(false);
+        }
+    };
+
+    // Helper: Add suggested skill to CV
+    const addSkillToCV = (skill: string, type: 'technical' | 'soft') => {
+        if (type === 'technical' && !cvData.technicalSkills.includes(skill)) {
+            setCvData({
+                ...cvData,
+                technicalSkills: [...cvData.technicalSkills, skill],
+            });
+        } else if (type === 'soft' && !cvData.softSkills.includes(skill)) {
+            setCvData({
+                ...cvData,
+                softSkills: [...cvData.softSkills, skill],
+            });
+        }
+        toast({
+            title: 'Compétence ajoutée',
+            description: `"${skill}" a été ajouté à vos compétences.`,
+        });
     };
 
     const handleGenerateCV = async () => {
@@ -583,9 +668,23 @@ export default function CVBuilderPage() {
                                             </p>
                                         </div>
 
-                                        <Button variant="outline" className="w-full">
-                                            <Sparkles className="h-4 w-4 mr-2" />
-                                            Optimiser avec l'IA (Bientôt disponible)
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                            onClick={handleEnhanceSummary}
+                                            disabled={isEnhancingSummary || !cvData.summary || cvData.summary.length < 10}
+                                        >
+                                            {isEnhancingSummary ? (
+                                                <>
+                                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                    Amélioration en cours...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Sparkles className="h-4 w-4 mr-2" />
+                                                    Améliorer avec l'IA (1 crédit)
+                                                </>
+                                            )}
                                         </Button>
                                     </div>
                                 )}
@@ -771,6 +870,8 @@ export default function CVBuilderPage() {
                                             <Label>Compétences Techniques</Label>
                                             <Textarea
                                                 rows={4}
+                                                value={cvData.technicalSkills.join(', ')}
+                                                onChange={(e) => setCvData({ ...cvData, technicalSkills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
                                                 placeholder="Ex: JavaScript, Python, React, Marketing Digital, Adobe Photoshop... (séparez par des virgules)"
                                                 className="resize-none"
                                             />
@@ -783,17 +884,71 @@ export default function CVBuilderPage() {
                                             <Label>Compétences Comportementales (Soft Skills)</Label>
                                             <Textarea
                                                 rows={4}
+                                                value={cvData.softSkills.join(', ')}
+                                                onChange={(e) => setCvData({ ...cvData, softSkills: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
                                                 placeholder="Ex: Leadership, Communication, Travail d'équipe, Résolution de problèmes..."
                                                 className="resize-none"
                                             />
                                         </div>
 
-                                        <div className="bg-purple-50 p-4 rounded-lg">
-                                            <p className="text-sm text-purple-800">
-                                                ✨ <strong>IA Suggérée :</strong> Basé sur votre profil, nous recommandons d'ajouter :
-                                                <span className="font-semibold"> Gestion de projet, Analyse de données, Créativité</span>
-                                            </p>
-                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full"
+                                            onClick={handleSuggestSkills}
+                                            disabled={isLoadingSkills}
+                                        >
+                                            {isLoadingSkills ? (
+                                                <>
+                                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                    Génération en cours...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Sparkles className="h-4 w-4 mr-2" />
+                                                    Obtenir des suggestions IA (1 crédit)
+                                                </>
+                                            )}
+                                        </Button>
+
+                                        {suggestedSkills && (
+                                            <div className="space-y-4 mt-4">
+                                                {suggestedSkills.technical.length > 0 && (
+                                                    <div className="bg-blue-50 p-4 rounded-lg">
+                                                        <p className="text-sm font-semibold text-blue-900 mb-2">💡 Compétences techniques suggérées :</p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {suggestedSkills.technical.map((skill, idx) => (
+                                                                <Badge
+                                                                    key={idx}
+                                                                    variant="secondary"
+                                                                    className="cursor-pointer hover:bg-blue-200"
+                                                                    onClick={() => addSkillToCV(skill, 'technical')}
+                                                                >
+                                                                    {skill} +
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {suggestedSkills.soft.length > 0 && (
+                                                    <div className="bg-purple-50 p-4 rounded-lg">
+                                                        <p className="text-sm font-semibold text-purple-900 mb-2">✨ Soft skills suggérés :</p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {suggestedSkills.soft.map((skill, idx) => (
+                                                                <Badge
+                                                                    key={idx}
+                                                                    variant="secondary"
+                                                                    className="cursor-pointer hover:bg-purple-200"
+                                                                    onClick={() => addSkillToCV(skill, 'soft')}
+                                                                >
+                                                                    {skill} +
+                                                                </Badge>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
 
