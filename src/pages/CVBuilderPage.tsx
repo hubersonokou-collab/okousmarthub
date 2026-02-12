@@ -12,10 +12,12 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useCredits } from '@/hooks/useAICV';
 import { getTemplateById } from '@/lib/cvTemplates';
+import { generateCVPDF } from '@/lib/pdfGenerationService';
+import { useAuth } from '@/hooks/useAuth';
 import {
     ArrowLeft, ArrowRight, Sparkles, FileText, Briefcase,
     GraduationCap, Award, Languages, User, Mail, Phone,
-    MapPin, Linkedin, Globe, Save, Download, Loader2
+    MapPin, Linkedin, Globe, Save, Download, Loader2, Upload, Camera
 } from 'lucide-react';
 
 const STEPS = [
@@ -32,9 +34,12 @@ export default function CVBuilderPage() {
     const { templateId } = useParams<{ templateId: string }>();
     const { toast } = useToast();
     const { creditsBalance, hasEnoughCredits } = useCredits();
+    const { user } = useAuth();
 
     const [currentStep, setCurrentStep] = useState(1);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [photoFile, setPhotoFile] = useState<File | null>(null);
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [cvData, setCvData] = useState({
         // Personal Info
         firstName: '',
@@ -110,6 +115,18 @@ export default function CVBuilderPage() {
         }
     };
 
+    const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setPhotoFile(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPhotoPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleGenerateCV = async () => {
         // Check credits
         if (!hasEnoughCredits(2)) {
@@ -122,21 +139,84 @@ export default function CVBuilderPage() {
             return;
         }
 
+        if (!user) {
+            toast({
+                title: 'Non connecté',
+                description: 'Vous devez être connecté pour générer un CV.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
         setIsGenerating(true);
 
         try {
-            // TODO: Call Supabase Edge Function to generate CV
-            // For now, simulate generation
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            // Transform cvData to match CVFormData interface
+            const formattedData = {
+                personalInfo: {
+                    firstName: cvData.firstName,
+                    lastName: cvData.lastName,
+                    email: cvData.email,
+                    phone: cvData.phone,
+                    address: cvData.address,
+                    city: cvData.city,
+                    country: cvData.country,
+                    linkedin: cvData.linkedin,
+                    portfolio: cvData.website,
+                },
+                summary: cvData.summary,
+                experience: cvData.experiences.map(exp => ({
+                    company: exp.company,
+                    position: exp.position,
+                    location: '',
+                    startDate: exp.startDate,
+                    endDate: exp.endDate || '',
+                    isCurrent: exp.current,
+                    description: exp.description,
+                    achievements: [],
+                })),
+                education: cvData.education.map(edu => ({
+                    institution: edu.institution,
+                    degree: edu.degree,
+                    fieldOfStudy: edu.field,
+                    startDate: edu.startDate,
+                    endDate: edu.endDate,
+                    description: edu.description,
+                })),
+                skills: {
+                    technical: cvData.technicalSkills,
+                    soft: cvData.softSkills,
+                },
+                languages: cvData.languages.map(lang => ({
+                    name: lang.language,
+                    proficiency: lang.level as any,
+                })),
+            };
 
-            toast({
-                title: '✅ CV Généré avec succès !',
-                description: 'Votre CV a été créé et est prêt à être téléchargé.',
+            // Generate PDF
+            const result = await generateCVPDF({
+                cvData: formattedData as any,
+                template: template!,
+                userId: user.id,
+                photoFile: photoFile || undefined,
             });
 
-            // Navigate to documents page
-            navigate('/services/cv-ai/documents');
+            if (result.success) {
+                toast({
+                    title: '✅ CV Généré avec succès !',
+                    description: 'Votre CV a été créé et téléchargé.',
+                });
+                // Navigate to documents page
+                navigate('/services/cv-ai/documents');
+            } else {
+                toast({
+                    title: 'Erreur',
+                    description: result.error || 'Une erreur est survenue.',
+                    variant: 'destructive',
+                });
+            }
         } catch (error) {
+            console.error('Error generating CV:', error);
             toast({
                 title: 'Erreur',
                 description: 'Une erreur est survenue lors de la génération.',
@@ -241,10 +321,10 @@ export default function CVBuilderPage() {
                                         >
                                             <div
                                                 className={`h-10 w-10 rounded-full flex items-center justify-center mb-1 ${isActive
-                                                        ? 'bg-blue-600 text-white'
-                                                        : isCompleted
-                                                            ? 'bg-green-600 text-white'
-                                                            : 'bg-gray-200'
+                                                    ? 'bg-blue-600 text-white'
+                                                    : isCompleted
+                                                        ? 'bg-green-600 text-white'
+                                                        : 'bg-gray-200'
                                                     }`}
                                             >
                                                 <StepIcon className="h-5 w-5" />
@@ -277,6 +357,67 @@ export default function CVBuilderPage() {
                                 {/* Step 1: Personal Info */}
                                 {currentStep === 1 && (
                                     <div className="space-y-4">
+                                        {/* Photo Upload  */}
+                                        <div className="bg-blue-50 p-6 rounded-lg border-2 border-dashed border-blue-200">
+                                            <Label className="text-base font-semibold mb-3 block">Photo Professionnelle</Label>
+                                            <div className="flex items-center gap-6">
+                                                {photoPreview ? (
+                                                    <div className="relative">
+                                                        <img
+                                                            src={photoPreview}
+                                                            alt="Photo de profil"
+                                                            className="w-32 h-32 object-cover rounded-full border-4 border-white shadow-lg"
+                                                        />
+                                                        <Button
+                                                            size="sm"
+                                                            variant="destructive"
+                                                            className="absolute -top-2 -right-2 h-8 w-8 rounded-full p-0"
+                                                            onClick={() => {
+                                                                setPhotoFile(null);
+                                                                setPhotoPreview(null);
+                                                            }}
+                                                        >
+                                                            ×
+                                                        </Button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
+                                                        <Camera className="h-12 w-12 text-gray-400" />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="text-sm text-gray-700 mb-3">
+                                                        Ajoutez une photo professionnelle pour les CV français. Recommandé pour les templates français.
+                                                    </p>
+                                                    <div className="flex gap-2">
+                                                        <label>
+                                                            <Input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={handlePhotoUpload}
+                                                                className="hidden"
+                                                                id="photo-upload"
+                                                            />
+                                                            <Button type="button" variant="outline" size="sm" asChild>
+                                                                <span className="cursor-pointer">
+                                                                    <Upload className="h-4 w-4 mr-2" />
+                                                                    Choisir une photo
+                                                                </span>
+                                                            </Button>
+                                                        </label>
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() => navigate('/services/cv-ai/photo-generator')}
+                                                        >
+                                                            <Sparkles className="h-4 w-4 mr-2" />
+                                                            Générer avec l'IA
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="grid md:grid-cols-2 gap-4">
                                             <div>
                                                 <Label htmlFor="firstName">Prénom *</Label>
