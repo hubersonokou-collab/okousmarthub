@@ -1,7 +1,7 @@
 // PDF Generation Service - Client-side
 import { pdf } from '@react-pdf/renderer';
 import { renderPDFTemplate } from './pdfTemplates/templateRenderer';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import type { CVFormData } from '@/types/aiCVService';
 import type { CVTemplate } from '@/types/aiCVService';
 
