@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { useCredits } from '@/hooks/useAICV';
 import { getTemplateById } from '@/lib/cvTemplates';
-import { generateCVPDF } from '@/lib/pdfGenerationService';
+import { generateCVPDF, downloadCVPDF } from '@/lib/pdfGenerationService';
 import { useAuth } from '@/hooks/useAuth';
 import {
     ArrowLeft, ArrowRight, Sparkles, FileText, Briefcase,
@@ -204,15 +204,38 @@ export default function CVBuilderPage() {
             if (result.success) {
                 toast({
                     title: '✅ CV Généré avec succès !',
-                    description: 'Votre CV a été créé et téléchargé.',
+                    description: 'Votre CV a été créé et sauvegardé.',
                 });
+                // Trigger automatic download
+                if (result.pdfBlob) {
+                    const url = URL.createObjectURL(result.pdfBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `CV_${cvData.lastName}_${Date.now()}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }
                 // Navigate to documents page
                 navigate('/services/cv-ai/documents');
             } else {
+                // Fallback: If upload failed, download directly
+                console.warn('Upload failed, falling back to direct download');
                 toast({
-                    title: 'Erreur',
-                    description: result.error || 'Une erreur est survenue.',
-                    variant: 'destructive',
+                    title: '⚠️ Upload non disponible',
+                    description: 'Téléchargement direct du CV en cours...',
+                });
+
+                await downloadCVPDF({
+                    cvData: formattedData as any,
+                    template: template!,
+                    photoFile: photoFile || undefined,
+                });
+
+                toast({
+                    title: '✅ CV téléchargé',
+                    description: 'Votre CV a été téléchargé avec succès.',
                 });
             }
         } catch (error) {
@@ -778,40 +801,75 @@ export default function CVBuilderPage() {
                                 {currentStep === 6 && (
                                     <div className="space-y-6">
                                         <div>
-                                            <h3 className="font-semibold mb-4">Langues</h3>
+                                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                                <Languages className="h-5 w-5 text-blue-600" />
+                                                Langues
+                                            </h3>
+
                                             {cvData.languages.map((lang, index) => (
-                                                <div key={index} className="grid md:grid-cols-2 gap-4 mb-4">
-                                                    <div>
-                                                        <Label>Langue</Label>
-                                                        <Input
-                                                            value={lang.language}
-                                                            onChange={(e) => {
-                                                                const newLangs = [...cvData.languages];
-                                                                newLangs[index].language = e.target.value;
-                                                                setCvData({ ...cvData, languages: newLangs });
-                                                            }}
-                                                            placeholder="Ex: Français, Anglais..."
-                                                        />
+                                                <Card key={index} className="mb-3 p-4 border-2 hover:border-blue-300 transition-colors">
+                                                    <div className="grid md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <Label>Langue</Label>
+                                                            <Input
+                                                                value={lang.language}
+                                                                onChange={(e) => {
+                                                                    const newLangs = [...cvData.languages];
+                                                                    newLangs[index].language = e.target.value;
+                                                                    setCvData({ ...cvData, languages: newLangs });
+                                                                }}
+                                                                placeholder="Ex: Français, Anglais, Espagnol..."
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <Label>Niveau de maîtrise</Label>
+                                                            <select
+                                                                className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white"
+                                                                value={lang.level}
+                                                                onChange={(e) => {
+                                                                    const newLangs = [...cvData.languages];
+                                                                    newLangs[index].level = e.target.value;
+                                                                    setCvData({ ...cvData, languages: newLangs });
+                                                                }}
+                                                            >
+                                                                <option value="beginner">Débutant (A1-A2)</option>
+                                                                <option value="intermediate">Intermédiaire (B1-B2)</option>
+                                                                <option value="advanced">Avancé (C1-C2)</option>
+                                                                <option value="native">Langue maternelle</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <Label>Niveau</Label>
-                                                        <select
-                                                            className="w-full h-10 px-3 rounded-md border border-gray-300"
-                                                            value={lang.level}
-                                                            onChange={(e) => {
-                                                                const newLangs = [...cvData.languages];
-                                                                newLangs[index].level = e.target.value;
+
+                                                    {cvData.languages.length > 1 && (
+                                                        <Button
+                                                            size="sm"
+                                                            variant="ghost"
+                                                            className="mt-3 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                            onClick={() => {
+                                                                const newLangs = cvData.languages.filter((_, i) => i !== index);
                                                                 setCvData({ ...cvData, languages: newLangs });
                                                             }}
                                                         >
-                                                            <option value="beginner">Débutant</option>
-                                                            <option value="intermediate">Intermédiaire</option>
-                                                            <option value="advanced">Avancé</option>
-                                                            <option value="native">Langue maternelle</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                            <span className="mr-1">🗑️</span>
+                                                            Supprimer cette langue
+                                                        </Button>
+                                                    )}
+                                                </Card>
                                             ))}
+
+                                            <Button
+                                                variant="outline"
+                                                className="w-full border-2 border-dashed border-blue-300 hover:bg-blue-50"
+                                                onClick={() => {
+                                                    setCvData({
+                                                        ...cvData,
+                                                        languages: [...cvData.languages, { language: '', level: 'intermediate' }]
+                                                    });
+                                                }}
+                                            >
+                                                <Languages className="h-4 w-4 mr-2" />
+                                                Ajouter une langue
+                                            </Button>
                                         </div>
 
                                         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
