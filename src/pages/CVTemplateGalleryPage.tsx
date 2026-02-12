@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TemplatePreviewCSS } from '@/components/TemplatePreviewCSS';
 import { useCredits } from '@/hooks/useAICV';
 import { useToast } from '@/hooks/use-toast';
 import { CV_TEMPLATES, TEMPLATE_CATEGORIES, getTemplatesByCountry, getPopularTemplates } from '@/lib/cvTemplates';
@@ -115,13 +116,8 @@ export default function CVTemplateGalleryPage() {
                                             </Badge>
                                         )}
 
-                                        <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-br opacity-20 group-hover:opacity-30 transition-opacity"
-                                                style={{
-                                                    background: `linear-gradient(135deg, ${template.color_scheme.primary}, ${template.color_scheme.accent})`
-                                                }}
-                                            />
-                                            <FileText className="h-24 w-24 text-gray-400" />
+                                        <div className="h-64 bg-white relative overflow-hidden border-b-2">
+                                            <TemplatePreviewCSS template={template} />
                                             <div className="absolute bottom-4 left-4 right-4">
                                                 <Badge className="mb-2">{COUNTRIES.find(c => c.code === template.country)?.flag} {template.type}</Badge>
                                             </div>
@@ -193,13 +189,8 @@ export default function CVTemplateGalleryPage() {
                                                         </Badge>
                                                     )}
 
-                                                    <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative overflow-hidden">
-                                                        <div className="absolute inset-0 bg-gradient-to-br opacity-20"
-                                                            style={{
-                                                                background: `linear-gradient(135deg, ${template.color_scheme.primary}, ${template.color_scheme.accent})`
-                                                            }}
-                                                        />
-                                                        <FileText className="h-16 w-16 text-gray-400" />
+                                                    <div className="h-48 bg-white relative overflow-hidden border-b-2">
+                                                        <TemplatePreviewCSS template={template} />
                                                         <div className="absolute top-4 left-4">
                                                             <Badge>{template.type}</Badge>
                                                         </div>
