@@ -82,32 +82,3 @@ export interface CoverLetterRequest {
     jobDescription: string;
     tone: 'professional' | 'creative' | 'enthusiastic';
 }
-
-/**
- * Call AI to generate a full cover letter
- * Cost: 2 credits
- */
-export async function generateCoverLetter(params: CoverLetterRequest): Promise<string> {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (!session) {
-            throw new Error('User not authenticated');
-        }
-
-        const response = await supabase.functions.invoke('ai-generate-letter', {
-            body: params,
-        });
-
-        if (response.error) {
-            console.error('Edge Function Error Details:', response.error);
-            const errorMessage = response.error.message || response.error.context?.message || 'Unknown error occurred';
-            throw new Error(errorMessage);
-        }
-
-        return response.data.letter;
-    } catch (error) {
-        console.error('Error generating cover letter:', error);
-        throw error;
-    }
-}
