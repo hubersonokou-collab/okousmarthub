@@ -419,6 +419,9 @@ export default function DynamicTravelForm() {
                         </Card>
                     </div>
                 </div>
+            </main>
+
+            <Footer />
         </div>
     );
 }
