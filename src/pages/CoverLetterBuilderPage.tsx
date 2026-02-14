@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useCredits } from '@/hooks/useAICV';
-import { generateCoverLetter } from '@/lib/aiAssistant';
+import { generateCoverLetterStream } from '@/lib/aiAssistant';
 import { Loader2, ArrowLeft, Send, Download, Sparkles, FileText, CheckCircle2 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 
