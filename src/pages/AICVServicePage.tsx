@@ -103,7 +103,7 @@ export default function AICVServicePage() {
                                 onClick={() => navigate('/services/cv-ai/create-letter')}
                             >
                                 <Send className="h-5 w-5 mr-2" />
-                                Créer une Lettre
+                                Créer une Lettre (Nouveau 🚀)
                             </Button>
                             <Button
                                 size="lg"
