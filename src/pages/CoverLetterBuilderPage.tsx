@@ -55,24 +55,26 @@ export default function CoverLetterBuilderPage() {
         }
 
         setIsGenerating(true);
+        setGeneratedLetter(''); // Reset for streaming
         try {
             const userInfo = `Nom: ${formData.fullName}, Email: ${formData.email}, Tel: ${formData.phone}, Poste actuel: ${formData.currentPosition}`;
 
-            const letter = await generateCoverLetter({
+            await generateCoverLetterStream({
                 userInfo,
                 jobTitle: formData.jobTitle,
                 companyName: formData.companyName,
                 jobDescription: formData.jobDescription,
                 tone: formData.tone,
+            }, (chunk) => {
+                setGeneratedLetter(prev => prev + chunk);
             });
 
-            setGeneratedLetter(letter);
             setStep(4); // Move to preview
             toast({
                 title: "Lettre générée !",
                 description: "Vous pouvez maintenant la modifier ou la télécharger.",
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast({
                 title: "Erreur",
