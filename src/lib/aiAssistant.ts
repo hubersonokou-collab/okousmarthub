@@ -69,6 +69,9 @@ export async function enhanceSummary(summary: string): Promise<string> {
 
         const data = response.data as EnhancedSummaryResponse;
         return data.enhancedSummary;
+    } catch (error) {
+        console.error('Error enhancing summary:', error);
+        throw error;
     }
 }
 
