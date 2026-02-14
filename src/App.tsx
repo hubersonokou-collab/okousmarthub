@@ -35,6 +35,7 @@ import ComingSoonPage from "./pages/ComingSoonPage";
 import UnifiedDashboardPage from "./pages/UnifiedDashboardPage";
 import CVTemplateGalleryPage from "./pages/CVTemplateGalleryPage";
 import CVBuilderPage from "./pages/CVBuilderPage";
+import CoverLetterBuilderPage from "./pages/CoverLetterBuilderPage";
 
 const queryClient = new QueryClient();
 
@@ -75,7 +76,7 @@ const App = () => (
           <Route path="/services/cv-ai/photo-gallery" element={<AIPhotoGalleryPage />} />
           <Route path="/services/cv-ai/create-cv" element={<CVTemplateGalleryPage />} />
           <Route path="/services/cv-ai/builder/:templateId" element={<CVBuilderPage />} />
-          <Route path="/services/cv-ai/create-letter" element={<ComingSoonPage />} />
+          <Route path="/services/cv-ai/create-letter" element={<CoverLetterBuilderPage />} />
           <Route path="/services/cv-ai/documents" element={<ComingSoonPage />} />
           <Route path="/admin/*" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

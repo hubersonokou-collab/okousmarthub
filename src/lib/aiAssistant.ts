@@ -69,8 +69,40 @@ export async function enhanceSummary(summary: string): Promise<string> {
 
         const data = response.data as EnhancedSummaryResponse;
         return data.enhancedSummary;
+    }
+}
+
+export interface CoverLetterRequest {
+    userInfo: string;
+    jobTitle: string;
+    companyName: string;
+    jobDescription: string;
+    tone: 'professional' | 'creative' | 'enthusiastic';
+}
+
+/**
+ * Call AI to generate a full cover letter
+ * Cost: 2 credits
+ */
+export async function generateCoverLetter(params: CoverLetterRequest): Promise<string> {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (!session) {
+            throw new Error('User not authenticated');
+        }
+
+        const response = await supabase.functions.invoke('ai-generate-letter', {
+            body: params,
+        });
+
+        if (response.error) {
+            throw new Error(response.error.message);
+        }
+
+        return response.data.letter;
     } catch (error) {
-        console.error('Error enhancing summary:', error);
+        console.error('Error generating cover letter:', error);
         throw error;
     }
 }
