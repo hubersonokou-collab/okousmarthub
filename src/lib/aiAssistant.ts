@@ -45,36 +45,6 @@ export async function suggestSkills(params: {
     }
 }
 
-/**
- * Call AI to enhance professional summary
- * Cost: 1 credit
- */
-export async function enhanceSummary(summary: string): Promise<string> {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-
-        if (!session) {
-            throw new Error('User not authenticated');
-        }
-
-        const response = await supabase.functions.invoke('ai-enhance-summary', {
-            body: {
-                summary,
-            },
-        });
-
-        if (response.error) {
-            throw new Error(response.error.message);
-        }
-
-        const data = response.data as EnhancedSummaryResponse;
-        return data.enhancedSummary;
-    } catch (error) {
-        console.error('Error enhancing summary:', error);
-        throw error;
-    }
-}
-
 export interface CoverLetterRequest {
     userInfo: string;
     jobTitle: string;
