@@ -100,7 +100,10 @@ export async function generateCoverLetter(params: CoverLetterRequest): Promise<s
         });
 
         if (response.error) {
-            throw new Error(response.error.message);
+            console.error('Edge Function Error Details:', response.error);
+            // Try to parse detailed error from the function if available
+            const errorMessage = response.error.message || response.error.context?.message || 'Unknown error occurred';
+            throw new Error(errorMessage);
         }
 
         return response.data.letter;
