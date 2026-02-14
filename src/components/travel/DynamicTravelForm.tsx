@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,9 @@ import { useCreateTravelRequest } from "@/hooks/useTravelRequest";
 import { TRAVEL_PROJECT_TYPES, POPULAR_DESTINATIONS, CURRENT_SITUATIONS, TravelProjectType, TravelCurrentSituation } from "@/lib/travelConstants";
 import { DOCUMENT_TEMPLATES_BY_PROJECT, getDocumentsByProject } from "@/lib/documentTemplates";
 import DocumentUploadZone from "./DocumentUploadZone";
+import { PaymentCard } from "./PaymentButton";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface TravelFormData {
     projectType: TravelProjectType | '';
@@ -28,6 +31,7 @@ interface TravelFormData {
 
 export default function DynamicTravelForm() {
     const navigate = useNavigate();
+    const { toast } = useToast();
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<TravelFormData>({
         projectType: '',
@@ -44,8 +48,18 @@ export default function DynamicTravelForm() {
         currentOccupation: '',
     });
     const [createdRequestId, setCreatedRequestId] = useState<string | null>(null);
+    const [user, setUser] = useState<any>(null);
 
     const createMutation = useCreateTravelRequest();
+
+    // Fetch authenticated user
+    useEffect(() => {
+        const fetchUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        fetchUser();
+    }, []);
 
     const handleInputChange = (field: keyof TravelFormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -59,6 +73,8 @@ export default function DynamicTravelForm() {
                 return !!(formData.passportNumber && formData.passportIssueDate && formData.passportExpiryDate && formData.currentSituation);
             case 3:
                 return !!createdRequestId; // Demande créée
+            case 4:
+                return !!createdRequestId && !!user; // Demande créée + user connecté
             default:
                 return true;
         }
@@ -341,12 +357,30 @@ export default function DynamicTravelForm() {
                             )}
 
                             {/* Step 4: Paiement */}
-                            {currentStep === 4 && (
-                                <div className="space-y-4 text-center py-8">
-                                    <p className="text-lg">Module de paiement à venir</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Montant: {TRAVEL_PROJECT_TYPES[formData.projectType as TravelProjectType]?.baseFee.toLocaleString()} FCFA
+                            {currentStep === 4 && createdRequestId && user && (
+                                <div className="space-y-4">
+                                    <p className="text-sm text-muted-foreground mb-4">
+                                        Pour finaliser votre demande, veuillez effectuer le paiement d'évaluation.
+                                        Votre dossier sera analysé sous 48h après réception.
                                     </p>
+                                    <PaymentCard
+                                        requestId={createdRequestId}
+                                        paymentStage="evaluation"
+                                        userEmail={user.email!}
+                                        fullName={formData.fullName}
+                                        onPaymentSuccess={() => {
+                                            toast({
+                                                title: "✅ Paiement effectué",
+                                                description: "Votre dossier sera traité sous 48h.",
+                                            });
+                                            setTimeout(() => navigate('/dashboard/client'), 2000);
+                                        }}
+                                    />
+                                </div>
+                            )}
+                            {currentStep === 4 && !user && (
+                                <div className="text-center py-8 text-muted-foreground">
+                                    <p>Connexion requise pour effectuer le paiement.</p>
                                 </div>
                             )}
 
