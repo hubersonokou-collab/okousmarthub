@@ -13,8 +13,8 @@ import DocumentUploadZone from "./DocumentUploadZone";
 import { PaymentCard } from "./PaymentButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+// import { Header } from "@/components/layout/Header";
+// import { Footer } from "@/components/layout/Footer";
 
 interface TravelFormData {
     projectType: TravelProjectType | '';
@@ -32,6 +32,7 @@ interface TravelFormData {
 }
 
 export default function DynamicTravelForm() {
+    console.log("DEBUG: FORM MOUNTED");
     const navigate = useNavigate();
     const { toast } = useToast();
     const [currentStep, setCurrentStep] = useState(1);
@@ -131,8 +132,9 @@ export default function DynamicTravelForm() {
         : [];
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-blue-50/30 to-white">
-            <Header />
+        <div className="min-h-screen flex flex-col bg-white border-8 border-red-600">
+            <div className="p-4 bg-yellow-300 text-red-700 font-bold text-center">MODE DEBUG ACTIF (Header/Footer masqués)</div>
+            {/* <Header /> */}
 
             <main className="flex-1 py-16">
                 <div className="container mx-auto px-4">
@@ -421,7 +423,7 @@ export default function DynamicTravelForm() {
                 </div>
             </main>
 
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }
