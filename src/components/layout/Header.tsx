@@ -19,6 +19,7 @@ const navLinks = [
   { href: "/services/redaction-academique", label: "Rédaction Académique" },
   { href: "/services/vap-vae", label: "VAP / VAE" },
   { href: "/services/cv-ai", label: "Service IA CV & Lettres" },
+  { href: "/services/solutions-web", label: "Solutions Web & Paiement" },
   { href: "/voyage", label: "VOYAGE" },
   { href: "/formations", label: "Formations" },
   { href: "/portfolio", label: "Portfolio" },

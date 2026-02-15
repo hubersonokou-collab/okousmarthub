@@ -16,6 +16,9 @@ import PaymentPage from "./pages/PaymentPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Portfolio from "./pages/Portfolio";
 import NotFound from "./pages/NotFound";
+import TestPage from "./pages/TestPage";
+import WebSolutionsPage from "./pages/WebSolutionsPage";
+import WebSolutionsOrderPage from "./pages/WebSolutionsOrderPage";
 import AcademicService from "./pages/AcademicService";
 import AcademicTrackerPage from "./pages/AcademicTrackerPage";
 import VAPVAEService from "./pages/VAPVAEService";
@@ -79,6 +82,9 @@ const App = () => (
           <Route path="/services/cv-ai/create-letter" element={<CoverLetterBuilderPage />} />
           <Route path="/services/cv-ai/documents" element={<ComingSoonPage />} />
           <Route path="/admin/*" element={<Admin />} />
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/services/solutions-web" element={<WebSolutionsPage />} />
+          <Route path="/services/solutions-web/order" element={<WebSolutionsOrderPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

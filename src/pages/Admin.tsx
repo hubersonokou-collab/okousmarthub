@@ -14,6 +14,7 @@ import { AIStatsPanel } from "@/components/admin/AIStatsPanel";
 import { PortfolioManager } from "@/components/admin/PortfolioManager";
 import { VoiceAssistant } from "@/components/ai/VoiceAssistant";
 import { AcademicAdmin } from "@/components/admin/AcademicAdmin";
+import { WebSolutionsManager } from "@/components/admin/WebSolutionsManager";
 
 // Overview Page
 function AdminOverview() {
@@ -101,11 +102,19 @@ function AdminPortfolio() {
   );
 }
 
-// Academic Requests Page
 function AdminAcademic() {
   return (
     <AdminLayout title="Rédaction Académique" description="Gérez les demandes de rédaction">
       <AcademicAdmin />
+    </AdminLayout>
+  );
+}
+
+// Web Solutions Page
+function AdminWebSolutions() {
+  return (
+    <AdminLayout title="Solutions Web" description="Gérez les commandes de sites et services digitaux">
+      <WebSolutionsManager />
     </AdminLayout>
   );
 }
@@ -149,6 +158,7 @@ export default function Admin() {
         <Route path="ai-stats" element={<AdminAIStats />} />
         <Route path="portfolio" element={<AdminPortfolio />} />
         <Route path="academic" element={<AdminAcademic />} />
+        <Route path="web-solutions" element={<AdminWebSolutions />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
       <VoiceAssistant context="general" />

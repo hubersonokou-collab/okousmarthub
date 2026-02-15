@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,18 @@ import DocumentUploadZone from "./DocumentUploadZone";
 import { PaymentCard } from "./PaymentButton";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-// import { Header } from "@/components/layout/Header";
-// import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+
+class ErrorBoundary extends React.Component<{ children: React.ReactNode, name: string }, { hasError: boolean }> {
+    constructor(props: any) { super(props); this.state = { hasError: false }; }
+    static getDerivedStateFromError(error: any) { return { hasError: true }; }
+    componentDidCatch(error: any, errorInfo: any) { console.error(`Error in ${this.props.name}:`, error, errorInfo); }
+    render() {
+        if (this.state.hasError) return <div className="p-4 border border-red-500 bg-red-50 text-red-500">⚠️ Erreur composant: {this.props.name}</div>;
+        return this.props.children;
+    }
+}
 
 interface TravelFormData {
     projectType: TravelProjectType | '';
@@ -133,8 +143,10 @@ export default function DynamicTravelForm() {
 
     return (
         <div className="min-h-screen flex flex-col bg-white border-8 border-red-600">
-            <div className="p-4 bg-yellow-300 text-red-700 font-bold text-center">MODE DEBUG ACTIF (Header/Footer masqués)</div>
-            {/* <Header /> */}
+            <div className="p-4 bg-yellow-300 text-red-700 font-bold text-center">MODE DEBUG SECURISE (ErrorBoundary Actif)</div>
+            <ErrorBoundary name="Header">
+                <Header />
+            </ErrorBoundary>
 
             <main className="flex-1 py-16">
                 <div className="container mx-auto px-4">
@@ -423,7 +435,9 @@ export default function DynamicTravelForm() {
                 </div>
             </main>
 
-            {/* <Footer /> */}
+            <ErrorBoundary name="Footer">
+                <Footer />
+            </ErrorBoundary>
         </div>
     );
 }
