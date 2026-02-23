@@ -88,10 +88,11 @@ export const useCreateVAPVAERequest = () => {
                 description: NOTIFICATION_MESSAGES.REQUEST_SUBMITTED_DESC,
             });
         },
-        onError: (error) => {
+        onError: (error: unknown) => {
             console.error('Error creating VAP/VAE request:', error);
+            const errMsg = error instanceof Error ? error.message : String(error);
             toast.error('Erreur lors de la création de la demande', {
-                description: 'Veuillez réessayer ou nous contacter.',
+                description: errMsg || 'Veuillez réessayer ou nous contacter.',
             });
         },
     });
