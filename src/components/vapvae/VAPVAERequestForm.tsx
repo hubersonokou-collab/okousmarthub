@@ -53,12 +53,14 @@ export function VAPVAERequestForm({ preselectedLevel }: VAPVAERequestFormProps) 
 
     const onSubmit = (data: FormData) => {
         const levelConfig = VAP_VAE_LEVELS[data.level];
+        const supportFee = SUPPORT_TYPES[data.support_type].price;
+        const totalAmount = levelConfig.price + supportFee;
 
         createRequest({
             ...data,
-            total_amount: levelConfig.price,
+            total_amount: totalAmount,
             advance_paid: 0,
-            balance_due: levelConfig.price,
+            balance_due: totalAmount,
         }, {
             onSuccess: (result) => {
                 navigate(`/services/vap-vae/suivi?number=${result.request_number}`);
@@ -67,6 +69,9 @@ export function VAPVAERequestForm({ preselectedLevel }: VAPVAERequestFormProps) 
     };
 
     const currentLevel = VAP_VAE_LEVELS[levelValue || 'DUT'];
+    const currentSupport = SUPPORT_TYPES[supportType || 'standard'];
+    const supportFee = currentSupport.price;
+    const grandTotal = currentLevel.price + supportFee;
 
     return (
         <Card className="w-full max-w-4xl mx-auto">
@@ -205,11 +210,18 @@ export function VAPVAERequestForm({ preselectedLevel }: VAPVAERequestFormProps) 
                             className="space-y-3"
                         >
                             {Object.values(SUPPORT_TYPES).map((type) => (
-                                <div key={type.value} className="flex items-start space-x-3 border rounded-lg p-4 hover:bg-accent cursor-pointer">
+                                <div key={type.value} className={`flex items-start space-x-3 border-2 rounded-lg p-4 hover:bg-accent cursor-pointer transition-colors ${supportType === type.value ? 'border-blue-500 bg-blue-50' : 'border-transparent'
+                                    }`}>
                                     <RadioGroupItem value={type.value} id={type.value} />
                                     <Label htmlFor={type.value} className="flex-1 cursor-pointer">
-                                        <div className="font-semibold">{type.label}</div>
-                                        <div className="text-sm text-muted-foreground">{type.description}</div>
+                                        <div className="flex items-center justify-between">
+                                            <div className="font-semibold">{type.label}</div>
+                                            <span className={`text-sm font-bold px-2 py-0.5 rounded-full ${type.price === 0
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-orange-100 text-orange-700'
+                                                }`}>{type.priceLabel}</span>
+                                        </div>
+                                        <div className="text-sm text-muted-foreground mt-1">{type.description}</div>
                                     </Label>
                                 </div>
                             ))}
@@ -219,18 +231,28 @@ export function VAPVAERequestForm({ preselectedLevel }: VAPVAERequestFormProps) 
                     {/* Résumé du prix */}
                     <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 space-y-3">
                         <h3 className="font-semibold text-lg">Récapitulatif financier</h3>
-                        <div className="space-y-2">
+                        <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
-                                <span>Prix total ({currentLevel.label}):</span>
-                                <span className="font-bold">{formatPrice(currentLevel.price)}</span>
+                                <span>Frais de dossier ({currentLevel.label}):</span>
+                                <span className="font-medium">{formatPrice(currentLevel.price)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span>Option de suivi ({currentSupport.label}):</span>
+                                <span className={`font-medium ${supportFee === 0 ? 'text-green-600' : 'text-orange-600'}`}>
+                                    {supportFee === 0 ? 'Gratuit' : formatPrice(supportFee)}
+                                </span>
+                            </div>
+                            <div className="border-t pt-2 flex justify-between text-base font-bold">
+                                <span>TOTAL :</span>
+                                <span className="text-blue-700">{formatPrice(grandTotal)}</span>
                             </div>
                             <div className="flex justify-between text-green-600">
-                                <span>Avance à payer:</span>
+                                <span>Avance à payer maintenant:</span>
                                 <span className="font-bold">{formatPrice(currentLevel.advance)}</span>
                             </div>
-                            <div className="flex justify-between text-blue-600">
-                                <span>Solde à la remise:</span>
-                                <span className="font-bold">{formatPrice(currentLevel.price - currentLevel.advance)}</span>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Solde à la remise du diplôme:</span>
+                                <span className="font-medium">{formatPrice(grandTotal - currentLevel.advance)}</span>
                             </div>
                         </div>
                     </div>

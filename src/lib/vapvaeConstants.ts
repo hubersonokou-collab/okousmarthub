@@ -30,17 +30,23 @@ export const SUPPORT_TYPES = {
     standard: {
         value: 'standard',
         label: 'Suivi Standard',
-        description: 'Traitement normal de votre dossier',
+        description: 'Traitement normal de votre dossier - notifications par email',
+        price: 0,
+        priceLabel: 'Gratuit',
     },
     priority: {
         value: 'priority',
         label: 'Suivi Prioritaire',
-        description: 'Traitement accéléré avec notifications fréquentes',
+        description: 'Traitement accéléré avec notifications fréquentes (SMS + email)',
+        price: 10000,
+        priceLabel: '+ 10 000 FCFA',
     },
     personalized: {
         value: 'personalized',
         label: 'Accompagnement Personnalisé',
-        description: 'Aide individuelle avec accompagnateur dédié',
+        description: 'Aide individuelle avec accompagnateur dédié, suivi WhatsApp en temps réel',
+        price: 50000,
+        priceLabel: '+ 50 000 FCFA',
     },
 } as const;
 
