@@ -15,6 +15,9 @@ import { PortfolioManager } from "@/components/admin/PortfolioManager";
 import { VoiceAssistant } from "@/components/ai/VoiceAssistant";
 import { AcademicAdmin } from "@/components/admin/AcademicAdmin";
 import { WebSolutionsManager } from "@/components/admin/WebSolutionsManager";
+import { FormationsManager } from "@/components/admin/FormationsManager";
+import { VAPVAEManager } from "@/components/admin/VAPVAEManager";
+import { CVAIStatsManager } from "@/components/admin/CVAIStatsManager";
 
 // Overview Page
 function AdminOverview() {
@@ -119,6 +122,33 @@ function AdminWebSolutions() {
   );
 }
 
+// Formations Page
+function AdminFormations() {
+  return (
+    <AdminLayout title="Formations" description="Gérez le catalogue de formations">
+      <FormationsManager />
+    </AdminLayout>
+  );
+}
+
+// VAP/VAE Page
+function AdminVAPVAE() {
+  return (
+    <AdminLayout title="VAP/VAE" description="Gérez les demandes VAP et VAE">
+      <VAPVAEManager />
+    </AdminLayout>
+  );
+}
+
+// CV/IA Stats Page
+function AdminCVAIStats() {
+  return (
+    <AdminLayout title="Service CV/IA" description="Statistiques et gestion des crédits IA">
+      <CVAIStatsManager />
+    </AdminLayout>
+  );
+}
+
 // Main Admin Router with Protection
 export default function Admin() {
   const { isAdmin, loading } = useAdmin();
@@ -159,6 +189,9 @@ export default function Admin() {
         <Route path="portfolio" element={<AdminPortfolio />} />
         <Route path="academic" element={<AdminAcademic />} />
         <Route path="web-solutions" element={<AdminWebSolutions />} />
+        <Route path="formations" element={<AdminFormations />} />
+        <Route path="vap-vae" element={<AdminVAPVAE />} />
+        <Route path="cv-ai-stats" element={<AdminCVAIStats />} />
         <Route path="*" element={<Navigate to="/admin" replace />} />
       </Routes>
       <VoiceAssistant context="general" />

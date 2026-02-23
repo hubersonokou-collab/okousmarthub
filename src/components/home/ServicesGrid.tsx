@@ -98,7 +98,7 @@ export function ServicesGrid() {
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 px-4 py-1">
             <TrendingUp className="h-3 w-3 mr-2" />
-            8 services professionnels
+            7 services professionnels
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
             Nos <span className="gradient-text">Services</span>

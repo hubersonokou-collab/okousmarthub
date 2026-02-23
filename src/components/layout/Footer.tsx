@@ -12,16 +12,16 @@ export function Footer() {
           <div className="space-y-4">
             <Link to="/" className="flex items-center space-x-3">
               <div className="relative flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden">
-                <img 
-                  src={okouLogo} 
-                  alt="OkouSmart Hub" 
+                <img
+                  src={okouLogo}
+                  alt="OkouSmart Hub"
                   className="h-full w-full object-cover"
                 />
               </div>
               <span className="font-bold text-xl text-white">{APP_NAME}</span>
             </Link>
             <p className="text-sm text-white/80">
-              Votre partenaire intelligent pour tous vos services professionnels. 
+              Votre partenaire intelligent pour tous vos services professionnels.
               Rédaction, voyage, emploi, formation et plus encore.
             </p>
             <div className="flex items-center gap-2 text-sm text-white/80">
@@ -46,12 +46,7 @@ export function Footer() {
                   Inscription VAP/VAE
                 </Link>
               </li>
-              <li>
-                <Link to="/services/assistance-voyage" className="hover:text-primary transition-colors flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-sky-500" />
-                  Assistance Voyage
-                </Link>
-              </li>
+
               <li>
                 <Link to="/services/cv-lettre" className="hover:text-primary transition-colors flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -139,10 +134,10 @@ export function Footer() {
                 <Twitter className="h-5 w-5" />
               </a>
             </div>
-            
+
             <div className="mt-6 p-4 rounded-lg bg-white/10">
               <p className="text-xs text-white/80">
-                <span className="text-amber-400 font-semibold">🤖 Assistant IA</span> disponible 24/7 
+                <span className="text-amber-400 font-semibold">🤖 Assistant IA</span> disponible 24/7
                 pour vous guider dans vos démarches.
               </p>
             </div>

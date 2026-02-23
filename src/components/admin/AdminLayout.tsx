@@ -16,6 +16,10 @@ import {
   Bot,
   Zap,
   Briefcase,
+  GraduationCap,
+  FileText,
+  Sparkles,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -39,6 +43,10 @@ const menuItems = [
   { icon: Bot, label: "Assistant IA", path: "/admin/ai-stats", badge: "New" },
   { icon: BarChart3, label: "Analytics", path: "/admin/analytics", badge: null },
   { icon: Briefcase, label: "Portfolio", path: "/admin/portfolio", badge: null },
+  { icon: GraduationCap, label: "Formations", path: "/admin/formations", badge: null },
+  { icon: FileText, label: "VAP/VAE", path: "/admin/vap-vae", badge: null },
+  { icon: Sparkles, label: "Service CV/IA", path: "/admin/cv-ai-stats", badge: null },
+  { icon: Globe, label: "Solutions Web", path: "/admin/web-solutions", badge: null },
 ];
 
 export function AdminLayout({ children, title, description }: AdminLayoutProps) {
@@ -49,7 +57,7 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
@@ -62,18 +70,18 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
       )}>
         {/* Header with CEO Photo */}
         <div className="relative h-48 overflow-hidden">
-          <img 
-            src={okouLogo} 
-            alt="CEO" 
+          <img
+            src={okouLogo}
+            alt="CEO"
             className="absolute inset-0 w-full h-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/80 to-slate-900" />
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <img 
-                  src={okouLogo} 
-                  alt="Admin" 
+                <img
+                  src={okouLogo}
+                  alt="Admin"
                   className="w-14 h-14 rounded-xl object-cover border-2 border-amber-400 shadow-lg"
                 />
                 <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900" />
@@ -115,12 +123,12 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
                   <span className="font-medium">{item.label}</span>
                 </div>
                 {item.badge && (
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className={cn(
                       "text-xs font-semibold",
-                      item.badge === "New" 
-                        ? "bg-emerald-500 text-white" 
+                      item.badge === "New"
+                        ? "bg-emerald-500 text-white"
                         : "bg-amber-500/20 text-amber-300"
                     )}
                   >
@@ -172,7 +180,7 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="icon" className="relative text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
                 <Bell className="h-5 w-5" />
