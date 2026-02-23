@@ -20,6 +20,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { toast } from "sonner";
 import { EvaluationPanel } from "@/components/travel/EvaluationPanel";
+import { FormationsManager } from "@/components/admin/FormationsManager";
 import { Link } from "react-router-dom";
 
 export default function SuperAdminDashboard() {
@@ -165,6 +166,7 @@ export default function SuperAdminDashboard() {
                 <Tabs defaultValue="overview" className="space-y-8">
                     <TabsList className="bg-white border p-1 rounded-xl shadow-sm">
                         <TabsTrigger value="overview" className="rounded-lg">Vue d'ensemble</TabsTrigger>
+                        <TabsTrigger value="catalogue" className="rounded-lg">Catalogue</TabsTrigger>
                         <TabsTrigger value="evaluations" className="rounded-lg">Voyages</TabsTrigger>
                         <TabsTrigger value="verification" className="rounded-lg">Vérification</TabsTrigger>
                         <TabsTrigger value="users" className="rounded-lg">Utilisateurs</TabsTrigger>
@@ -308,10 +310,23 @@ export default function SuperAdminDashboard() {
                                                 <span className="text-[10px] uppercase font-bold text-slate-500">Portfolio</span>
                                             </Link>
                                         </Button>
+                                        <Button variant="outline" className="h-20 flex-col gap-2 rounded-xl border-dashed border-slate-200" onClick={() => document.querySelector('[value="catalogue"]')?.dispatchEvent(new MouseEvent('click', { bubbles: true }))}>
+                                            <GraduationCap className="h-5 w-5 text-amber-500" />
+                                            <span className="text-[10px] uppercase font-bold text-slate-500">Éditer Catalogue</span>
+                                        </Button>
                                     </CardContent>
                                 </Card>
                             </div>
                         </div>
+                    </TabsContent>
+
+                    {/* TAB: Catalogue de formations */}
+                    <TabsContent value="catalogue">
+                        <Card className="border-none shadow-sm">
+                            <CardContent className="pt-6">
+                                <FormationsManager />
+                            </CardContent>
+                        </Card>
                     </TabsContent>
 
                     {/* TAB: Évaluations Voyages (Existing logic) */}
