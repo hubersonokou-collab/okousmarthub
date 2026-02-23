@@ -12,25 +12,34 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 interface VAPVAERequest {
     id: string;
+    request_number: string;
     user_id: string;
     service_type: string;
     full_name: string;
     email: string;
     phone: string;
-    current_situation: string | null;
-    target_diploma: string | null;
-    experience_years: number | null;
+    current_profession: string;
+    years_of_experience: number;
+    desired_field: string;
+    level: string;
+    support_type: string;
     status: string;
-    admin_notes: string | null;
+    notes: string | null;
+    total_amount: number;
+    advance_paid: number;
+    balance_due: number;
     created_at: string;
     updated_at: string;
 }
 
 const statusConfig = {
     pending: { label: "En attente", color: "bg-yellow-500", icon: Clock },
-    in_progress: { label: "En cours", color: "bg-blue-500", icon: FileText },
-    validated: { label: "Validé", color: "bg-green-500", icon: CheckCircle },
+    processing: { label: "En traitement", color: "bg-blue-500", icon: FileText },
+    document_review: { label: "Révision docs", color: "bg-indigo-500", icon: Filter },
+    validation_pending: { label: "En validation", color: "bg-purple-500", icon: Clock },
+    completed: { label: "Terminé", color: "bg-green-500", icon: CheckCircle },
     rejected: { label: "Refusé", color: "bg-red-500", icon: XCircle },
+    cancelled: { label: "Annulé", color: "bg-gray-500", icon: XCircle },
 };
 
 export function VAPVAEManager() {
@@ -139,11 +148,11 @@ export function VAPVAEManager() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
+                                    <TableHead>N° Dossier</TableHead>
                                     <TableHead>Date</TableHead>
-                                    <TableHead>Type</TableHead>
                                     <TableHead>Nom</TableHead>
-                                    <TableHead>Contact</TableHead>
-                                    <TableHead>Diplôme visé</TableHead>
+                                    <TableHead>Niveau</TableHead>
+                                    <TableHead>Total</TableHead>
                                     <TableHead>Statut</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
@@ -151,18 +160,15 @@ export function VAPVAEManager() {
                             <TableBody>
                                 {requests.map((request) => (
                                     <TableRow key={request.id}>
+                                        <TableCell className="font-mono text-xs">{request.request_number}</TableCell>
                                         <TableCell className="text-sm">
                                             {new Date(request.created_at).toLocaleDateString()}
                                         </TableCell>
-                                        <TableCell>
-                                            <Badge variant="outline">{request.service_type}</Badge>
-                                        </TableCell>
                                         <TableCell className="font-medium">{request.full_name}</TableCell>
-                                        <TableCell className="text-sm">
-                                            <div>{request.email}</div>
-                                            <div className="text-muted-foreground">{request.phone}</div>
+                                        <TableCell>
+                                            <Badge variant="outline">{request.level}</Badge>
                                         </TableCell>
-                                        <TableCell className="text-sm">{request.target_diploma || "-"}</TableCell>
+                                        <TableCell className="text-sm font-semibold">{request.total_amount?.toLocaleString()} F</TableCell>
                                         <TableCell>{getStatusBadge(request.status)}</TableCell>
                                         <TableCell className="text-right">
                                             <Button
