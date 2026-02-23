@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Users, 
-  Package, 
-  DollarSign, 
-  TrendingUp, 
+import {
+  Users,
+  Package,
+  DollarSign,
+  TrendingUp,
   MessageSquare,
   Clock,
   CheckCircle,
@@ -43,10 +43,25 @@ export function StatsCards() {
           .from("profiles")
           .select("*", { count: "exact", head: true });
 
-        // Fetch orders
+        // Fetch orders (Web Solutions & Others)
         const { data: orders } = await supabase
           .from("orders")
           .select("status, total_amount");
+
+        // Fetch Travel Requests
+        const { data: travelRequests } = await supabase
+          .from("travel_requests")
+          .select("status, total_amount, amount_paid");
+
+        // Fetch Academic Requests
+        const { data: academicRequests } = await supabase
+          .from("academic_requests")
+          .select("status, total_amount, advance_paid");
+
+        // Fetch VAP/VAE Requests
+        const { data: vapVaeRequests } = await supabase
+          .from("vap_vae_requests")
+          .select("status");
 
         // Fetch testimonials
         const { data: testimonials } = await supabase
@@ -61,14 +76,32 @@ export function StatsCards() {
           .select("*", { count: "exact", head: true })
           .gte("created_at", sevenDaysAgo.toISOString());
 
-        const totalRevenue = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
-        const pendingOrders = orders?.filter(o => o.status === "pending").length || 0;
-        const completedOrders = orders?.filter(o => o.status === "completed").length || 0;
+        // Aggregate Revenue
+        const orderRevenue = orders?.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0) || 0;
+        const travelRevenue = travelRequests?.reduce((sum, r) => sum + (Number(r.amount_paid) || 0), 0) || 0;
+        const academicRevenue = academicRequests?.reduce((sum, r) => sum + (Number(r.advance_paid) || 0), 0) || 0;
+        const totalRevenue = orderRevenue + travelRevenue + academicRevenue;
+
+        // Aggregate Orders/Requests Count
+        const totalOrders = (orders?.length || 0) + (travelRequests?.length || 0) + (academicRequests?.length || 0) + (vapVaeRequests?.length || 0);
+
+        const pendingOrders =
+          (orders?.filter(o => o.status === "pending").length || 0) +
+          (travelRequests?.filter(r => r.status === "registration").length || 0) +
+          (academicRequests?.filter(r => r.status === "pending").length || 0) +
+          (vapVaeRequests?.filter(r => r.status === "pending").length || 0);
+
+        const completedOrders =
+          (orders?.filter(o => o.status === "completed").length || 0) +
+          (travelRequests?.filter(r => r.status === "completed").length || 0) +
+          (academicRequests?.filter(r => r.status === "completed").length || 0) +
+          (vapVaeRequests?.filter(r => r.status === "validated").length || 0);
+
         const approvedTestimonials = testimonials?.filter(t => t.is_approved).length || 0;
 
         setStats({
           totalUsers: usersCount || 0,
-          totalOrders: orders?.length || 0,
+          totalOrders,
           totalRevenue,
           pendingOrders,
           completedOrders,
@@ -120,8 +153,8 @@ export function StatsCards() {
     },
     {
       title: "Taux de complétion",
-      value: stats.totalOrders > 0 
-        ? Math.round((stats.completedOrders / stats.totalOrders) * 100) + "%" 
+      value: stats.totalOrders > 0
+        ? Math.round((stats.completedOrders / stats.totalOrders) * 100) + "%"
         : "N/A",
       subValue: `${stats.completedOrders}/${stats.totalOrders}`,
       icon: TrendingUp,
@@ -166,8 +199,8 @@ export function StatsCards() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map((card, index) => (
-        <Card 
-          key={card.title} 
+        <Card
+          key={card.title}
           className="overflow-hidden hover:shadow-lg transition-all duration-300 animate-slide-up"
           style={{ animationDelay: `${index * 0.05}s` }}
         >

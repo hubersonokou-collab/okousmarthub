@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { APP_NAME } from "@/lib/constants";
 import okouLogo from "@/assets/okou-background.png";
+import { NotificationBell } from "./NotificationBell";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -182,10 +183,7 @@ export function AdminLayout({ children, title, description }: AdminLayoutProps) 
             </div>
 
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" className="relative text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              </Button>
+              <NotificationBell />
               <Button size="sm" className="gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg shadow-amber-500/20">
                 <Zap className="h-4 w-4" />
                 Actions rapides
