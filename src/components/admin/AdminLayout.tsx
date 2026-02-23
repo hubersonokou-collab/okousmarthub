@@ -44,7 +44,7 @@ const menuItems = [
   { icon: Bot, label: "Assistant IA", path: "/admin/ai-stats", badge: "New" },
   { icon: BarChart3, label: "Analytics", path: "/admin/analytics", badge: null },
   { icon: Briefcase, label: "Portfolio", path: "/admin/portfolio", badge: null },
-  { icon: GraduationCap, label: "Formations", path: "/admin/formations", badge: null },
+  { icon: GraduationCap, label: "Catalogue", path: "/admin/formations", badge: null },
   { icon: FileText, label: "VAP/VAE", path: "/admin/vap-vae", badge: null },
   { icon: Sparkles, label: "Service CV/IA", path: "/admin/cv-ai-stats", badge: null },
   { icon: Globe, label: "Solutions Web", path: "/admin/web-solutions", badge: null },

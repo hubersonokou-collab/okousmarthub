@@ -225,12 +225,7 @@ export function FormationsManager() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="text-xl font-semibold text-foreground">Formations</h2>
-                    <p className="text-sm text-muted-foreground">
-                        Gérez le catalogue de formations
-                    </p>
-                </div>
+                <div />
                 <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
                     <DialogTrigger asChild>
                         <Button className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white">

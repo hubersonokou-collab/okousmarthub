@@ -125,7 +125,7 @@ function AdminWebSolutions() {
 // Formations Page
 function AdminFormations() {
   return (
-    <AdminLayout title="Formations" description="Gérez le catalogue de formations">
+    <AdminLayout title="Catalogue" description="Gérez le catalogue de formations">
       <FormationsManager />
     </AdminLayout>
   );
