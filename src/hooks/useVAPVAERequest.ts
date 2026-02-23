@@ -88,11 +88,14 @@ export const useCreateVAPVAERequest = () => {
                 description: NOTIFICATION_MESSAGES.REQUEST_SUBMITTED_DESC,
             });
         },
-        onError: (error: unknown) => {
-            console.error('Error creating VAP/VAE request:', error);
-            const errMsg = error instanceof Error ? error.message : String(error);
+        onError: (error: any) => {
+            console.error('DEBUG: Full error object:', error);
+            if (error?.details) console.log('DEBUG: Error details:', error.details);
+            if (error?.hint) console.log('DEBUG: Error hint:', error.hint);
+
+            const errMsg = error?.message || (typeof error === 'string' ? error : 'Erreur inconnue');
             toast.error('Erreur lors de la création de la demande', {
-                description: errMsg || 'Veuillez réessayer ou nous contacter.',
+                description: `Détail : ${errMsg}`,
             });
         },
     });
